@@ -22,14 +22,20 @@ task liquibaseUpdate(type: JavaExec) {
     args 'update'
 }
 
+rollbacks = "0"
 
 task liquibaseRollback(type: JavaExec) {
 	description 'Liquibase rollbacks DB by specified number of changesets'
     group = "Liquibase"
     classpath configurations.liquibase
     main = 'liquibase.integration.commandline.Main'
-	def rollbacks = hasProperty('count') ? count.toInteger() : 0
-	println 'number of changeset rollbacks: ' + rollbacks
+//	def rollbacks = hasProperty('count') ? count.toInteger() : 0
+//  rollbacks = ("$count" == null) ? "$count" : 0
+	println "number of changeset rollbacks: $rollbacks"
     args 'rollbackCount'
-    args rollbacks
+    args "$rollbacks"
+}
+
+task showArgs << {
+    println "$word1 $word2"
 }
