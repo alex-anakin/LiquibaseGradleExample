@@ -1,0 +1,35 @@
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+defaultTasks 'liquibaseUpdate'
+
+configurations {
+    liquibase
+}
+
+dependencies {
+    liquibase 'org.postgresql:postgresql:9.4-1201-jdbc41'
+    liquibase 'org.liquibase:liquibase-core:3.4.0'
+}
+
+task liquibaseUpdate(type: JavaExec) {
+	description 'Liquibase updates DB by all not used changesets'
+    group = 'Liquibase'
+    classpath configurations.liquibase
+    main = 'liquibase.integration.commandline.Main'
+    args 'update'
+}
+
+
+task liquibaseRollback(type: JavaExec) {
+	description 'Liquibase rollbacks DB by specified number of changesets'
+    group = "Liquibase"
+    classpath configurations.liquibase
+    main = 'liquibase.integration.commandline.Main'
+	def rollbacks = hasProperty('count') ? count.toInteger() : 0
+	println 'number of changeset rollbacks: ' + rollbacks
+    args 'rollbackCount'
+    args rollbacks
+}
